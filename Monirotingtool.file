@@ -1,0 +1,56 @@
+# Monirotingtool
+
+so what is compliance monitoring tool that tool monitors tranffic using watchdog library 
+
+import time
+import logging
+from watchdog.observers import Observer
+from watchdog.events import FileSystemEventHandler
+
+# Setup logging
+logging.basicConfig(filename='compliance_monitor.log', level=logging.INFO)
+
+class ComplianceHandler(FileSystemEventHandler):
+    def on_modified(self, event):
+        logging.info(f"File modified: {event.src_path}")
+    
+    def on_created(self, event):
+        logging.info(f"File created: {event.src_path}")
+    
+    def on_deleted(self, event):
+        logging.info(f"File deleted: {event.src_path}")
+
+def start_monitoring(path):
+    event_handler = ComplianceHandler()
+    observer = Observer()
+    observer.schedule(event_handler, path, recursive=True)
+    observer.start()
+    logging.info(f"Started monitoring {path}")
+
+    try:
+        while True:
+            time.sleep(1)
+    except KeyboardInterrupt:
+        observer.stop()
+    observer.join()
+
+if __name__ == "__main__":
+    PATH_TO_MONITOR = "."  # Monitor the current directory
+    start_monitoring(PATH_TO_MONITOR)
+
+    How set up this in Pc:
+1.pip install watchdog  //install watchdog library in python
+2.create directory
+mkdir compliance_monitor
+cd compliance_monitor
+3.Enter the Source code 
+4.Run The source code
+python compliance_monitor.py
+5.Open windows command prompt and write
+python compliance_monitor.py
+6.Run Code 
+python compliance_monitor.py
+
+here set up is done you are notify  by upcoming traffics in Your system 
+
+    
